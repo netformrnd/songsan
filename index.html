@@ -835,10 +835,31 @@ function togglePanel(panelId, btn) {
   }
 }
 
-// Checkbox
+// Checkbox with localStorage persistence
 function toggleCheck(cb) {
   cb.closest('li').classList.toggle('checked', cb.checked);
+  saveChecks();
 }
+function saveChecks() {
+  const state = {};
+  document.querySelectorAll('.docs-list input[type="checkbox"]').forEach(cb => {
+    state[cb.id] = cb.checked;
+  });
+  localStorage.setItem('songsan_checklist', JSON.stringify(state));
+}
+function loadChecks() {
+  const saved = localStorage.getItem('songsan_checklist');
+  if (!saved) return;
+  const state = JSON.parse(saved);
+  Object.keys(state).forEach(id => {
+    const cb = document.getElementById(id);
+    if (cb) {
+      cb.checked = state[id];
+      if (state[id]) cb.closest('li').classList.add('checked');
+    }
+  });
+}
+loadChecks();
 
 // Dot click done
 document.querySelectorAll('.step .dot').forEach(dot => {
