@@ -472,6 +472,8 @@
     .pay-arrow { display: none; }
   }
 </style>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 </head>
 <body>
 <div class="wrap">
@@ -835,7 +837,19 @@ function togglePanel(panelId, btn) {
   }
 }
 
-// Checkbox with localStorage persistence
+// Firebase config & init
+firebase.initializeApp({
+  apiKey: "AIzaSyDT4l9pSx3ozpcvPzRtfdCwNI0KqMxSk2s",
+  authDomain: "order-d03ce.firebaseapp.com",
+  databaseURL: "https://order-d03ce-default-rtdb.firebaseio.com",
+  projectId: "order-d03ce",
+  storageBucket: "order-d03ce.firebasestorage.app",
+  messagingSenderId: "930014374996",
+  appId: "1:930014374996:web:67d764f5bc946d1781d1c1"
+});
+const dbRef = firebase.database().ref('songsan-checklist');
+
+// Checkbox with Firebase persistence
 function toggleCheck(cb) {
   cb.closest('li').classList.toggle('checked', cb.checked);
   saveChecks();
@@ -845,21 +859,20 @@ function saveChecks() {
   document.querySelectorAll('.docs-list input[type="checkbox"]').forEach(cb => {
     state[cb.id] = cb.checked;
   });
-  localStorage.setItem('songsan_checklist', JSON.stringify(state));
+  dbRef.set(state);
 }
-function loadChecks() {
-  const saved = localStorage.getItem('songsan_checklist');
-  if (!saved) return;
-  const state = JSON.parse(saved);
+// Listen for realtime changes
+dbRef.on('value', snap => {
+  const state = snap.val();
+  if (!state) return;
   Object.keys(state).forEach(id => {
     const cb = document.getElementById(id);
     if (cb) {
       cb.checked = state[id];
-      if (state[id]) cb.closest('li').classList.add('checked');
+      cb.closest('li').classList.toggle('checked', state[id]);
     }
   });
-}
-loadChecks();
+});
 
 // Dot click done
 document.querySelectorAll('.step .dot').forEach(dot => {
