@@ -847,7 +847,7 @@ firebase.initializeApp({
   messagingSenderId: "930014374996",
   appId: "1:930014374996:web:67d764f5bc946d1781d1c1"
 });
-const dbRef = firebase.database().ref('songsan-checklist');
+const dbRef = firebase.database().ref('songsan-checklist/checks');
 
 // Checkbox with Firebase persistence
 function toggleCheck(cb) {
@@ -874,10 +874,26 @@ dbRef.on('value', snap => {
   });
 });
 
-// Dot click done
-document.querySelectorAll('.step .dot').forEach(dot => {
+// Dot click done with Firebase persistence
+const dotsRef = firebase.database().ref('songsan-checklist/dots');
+document.querySelectorAll('.step .dot').forEach((dot, idx) => {
   dot.addEventListener('click', function() {
     this.closest('.step').classList.toggle('done');
+    saveDots();
+  });
+});
+function saveDots() {
+  const state = {};
+  document.querySelectorAll('.step').forEach((step, idx) => {
+    state['step' + idx] = step.classList.contains('done');
+  });
+  dotsRef.set(state);
+}
+dotsRef.on('value', snap => {
+  const state = snap.val();
+  if (!state) return;
+  document.querySelectorAll('.step').forEach((step, idx) => {
+    step.classList.toggle('done', !!state['step' + idx]);
   });
 });
 
