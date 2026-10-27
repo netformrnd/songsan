@@ -53,6 +53,10 @@
   .check.off { background: #f7f7f8; border-color: #ccc; }
   .check.off .check-icon { background: #bbb; }
   .check.off .check-label { color: #888; }
+  .money-tag.visit { background: #2E75B6; color: #fff; }
+  .money-tag.win { background: #27AE60; color: #fff; }
+  .qual-note.win { color: #1B7A43; background: #EBF9F0; border: 1px solid #27AE60; }
+  .qual-note.win b { color: #1B7A43; }
   .qual-note { margin-top: 10px; font-size: 12px; color: #B9651A; background: #FFF6EC; border-radius: 8px; padding: 8px 12px; line-height: 1.5; }
   .qual-result span { font-size: 12px; font-weight: 500; opacity: .9; }
 
@@ -282,7 +286,7 @@
         </div>
       </div>
       <div class="qual-result">일반순위자로 신청 (우선순위 선택 시 신청 무효)</div>
-      <div class="qual-note">⚠ 같은 필지에 우선순위 신청자가 있으면 우선순위자 먼저 추첨 · 4명 이상이면 일반순위 추첨 없음</div>
+      <div class="qual-note win">🎉 10/22 전자추첨 <b>당첨</b> · 입주심사 전 결과이며 산단공 사전심의를 거쳐 <b>11/20 분양대상자 최종 선정</b></div>
     </div>
   </div>
 
@@ -290,28 +294,29 @@
   <div class="section-label">📅 청약 진행 타임라인 <span class="hint">· 점을 누르면 완료 표시 · 상세보기를 누르면 제출 서류</span></div>
   <div class="timeline-wrap">
     <div class="timeline">
-      <div class="step c-gray" data-end="2026-09-25">
+      <div class="step c-gray" data-end="2026-09-29">
         <div class="dot"></div>
         <span class="phase">사전준비</span>
-        <div class="date">~ 9/25</div>
+        <div class="date">~ 9/29</div>
         <div class="title">신청 준비</div>
         <button class="docs-inline-link" onclick="togglePanel('docsPanel', this)">상세보기</button>
       </div>
 
-      <div class="step c-blue" data-start="2026-09-21" data-end="2026-10-13">
+      <div class="step c-blue" data-done="1" data-start="2026-09-30" data-end="2026-10-16">
         <div class="dot"></div>
         <span class="phase">청약</span>
-        <div class="date">9/21 ~ 10/13</div>
+        <div class="date">9/30 ~ 10/16</div>
         <div class="title">온라인신청</div>
-        <span class="money-tag">🔔 예약금 1,000만</span>
+        <span class="money-tag">✅ 신청·입금 완료 10/8</span>
         <button class="docs-inline-link" onclick="togglePanel('onlinePanel', this)">상세보기</button>
       </div>
 
-      <div class="step c-green" data-start="2026-10-22" data-end="2026-10-22">
+      <div class="step c-green" data-done="1" data-start="2026-10-22" data-end="2026-10-22">
         <div class="dot"></div>
         <span class="phase">전자추첨</span>
         <div class="date">10/22</div>
-        <div class="title">결과발표<br><span style="font-size:11px; font-weight:400; color:#999;">당첨자 + 예비3인</span></div>
+        <div class="title">결과발표</div>
+        <span class="money-tag win">🎉 당첨</span>
       </div>
 
       <div class="step c-orange" data-start="2026-10-23" data-end="2026-11-04">
@@ -319,6 +324,7 @@
         <span class="phase">서류제출</span>
         <div class="date">10/23 ~ 11/4</div>
         <div class="title">당첨자 서류 제출</div>
+        <span class="money-tag visit">📍 10/29(목) 14:15 방문</span>
         <button class="docs-inline-link" onclick="togglePanel('simsaPanel', this)">상세보기</button>
       </div>
 
@@ -375,6 +381,8 @@
               <li><input type="checkbox" id="d12" onchange="toggleCheck(this)"><label for="d12">신청 순위 : 일반순위 확정 (29-1 우선순위 분양)</label></li>
               <li><input type="checkbox" id="d15" onchange="toggleCheck(this)"><label for="d15">신청 필지 : 303-30-0001 (산업30-26, 대표님 지시)</label></li>
               <li><input type="checkbox" id="d16" onchange="toggleCheck(this)"><label for="d16">대표님 진행 보고 (잔디)</label></li>
+              <li><input type="checkbox" id="d17" onchange="toggleCheck(this)"><label for="d17">온라인 신청 완료 (10/8, 접수번호 EL-0226179)</label></li>
+              <li><input type="checkbox" id="d18" onchange="toggleCheck(this)"><label for="d18">예약금 1,000만원 입금 · 나의참가현황 확인</label></li>
             </ul>
           </div>
         </div>
@@ -401,15 +409,16 @@
           <span class="online-arrow">→</span>
           <div class="online-step"><span class="online-num">⑦</span> 신청예약금 입금</div>
         </div>
-        <div class="panel-note" style="margin-top:14px">※ 신청서 10/13(화) <b>17:00</b> · 예약금 <b>18:00</b> 마감 · 입금 후 취소·변경 불가 · 1인 1필지 · <b>신청 순위는 반드시 "일반순위"</b></div>
+        <div class="panel-note" style="margin-top:14px">※ 정정공고(접수 9/30~10/16) 기준 : 신청서 10/16(금) <b>17:00</b> · 예약금 <b>18:00</b> · 입금 후 취소·변경 불가 · 1인 1필지 · <b>신청 순위는 반드시 "일반순위"</b></div>
       </div>
     </div>
 
     <div class="panel" id="simsaPanel">
       <div class="panel-body">
         <div class="panel-header">
-          <span class="ph-icon">📁</span> 당첨자 제출 서류 (10/23~11/4 · 방문 / 예비순위는 songsan@kwater.or.kr)
+          <span class="ph-icon">📁</span> 당첨자 제출 서류 · <b>방문 확정 10/29(목) 14:15</b> — K-water 도시본부 2층 도시관리처 (안산시 단원구 광덕대로 197)
         </div>
+        <div class="panel-note">※ 신분증·사업자등록증을 제외한 서류는 <b>공고일(9/9) 이후 발급한 원본</b> · 29-1 때 발급분 사용 불가</div>
         <div class="docs-grid">
           <div class="docs-group">
             <div class="docs-group-title">입주자격 사전심의 서류</div>
@@ -493,7 +502,7 @@
     <div class="payment">
       <div class="pay-item">
         <div class="pay-label">예약금</div>
-        <div class="pay-timing">청약 신청 시 (9/21~10/13)</div>
+        <div class="pay-timing">청약 신청 시 (9/30~10/16)</div>
         <div class="pay-amt">1,000만원</div>
         <div class="pay-arrow">›</div>
       </div>
@@ -1561,7 +1570,7 @@ var steps = Array.prototype.slice.call(document.querySelectorAll('.step'));
 function autoDone() {
   steps.forEach(function(step){
     var end = step.dataset.end ? D(step.dataset.end) : null;
-    step.classList.toggle('done', !!(end && end < today));
+    step.classList.toggle('done', !!(step.dataset.done === '1' || (end && end < today)));
   });
 }
 autoDone();
@@ -1583,8 +1592,8 @@ store.on('dots', function(state){
 // NOW 배너
 (function(){
   var meta = [
-    { name: '신청 준비', period: '~ 9월 25일' },
-    { name: '온라인 신청 + 예약금 납부', period: '9월 21일 ~ 10월 13일', dday: '2026-10-13', ddayLabel: '신청 마감' },
+    { name: '신청 준비', period: '~ 9월 29일' },
+    { name: '온라인 신청 + 예약금 납부', period: '9월 30일 ~ 10월 16일', dday: '2026-10-16', ddayLabel: '신청 마감' },
     { name: '전자추첨 결과 발표', period: '10월 22일 14:00' },
     { name: '당첨자 서류 제출', period: '10월 23일 ~ 11월 4일', dday: '2026-11-04', ddayLabel: '제출 마감' },
     { name: '입주자격 사전심의', period: '11월 5일 ~ 11월 19일' },
@@ -1597,6 +1606,7 @@ store.on('dots', function(state){
   // 진행 중 단계 중 가장 먼저 끝나는 공고 일정(사전준비 제외)을 우선
   for (var i = 1; i < steps.length; i++) {
     var s = steps[i].dataset.start ? D(steps[i].dataset.start) : null, e = steps[i].dataset.end ? D(steps[i].dataset.end) : null;
+    if (steps[i].dataset.done === '1') continue;
     if (s && s <= today && (!e || today <= e)) { hit = i; break; }
   }
   if (hit < 0) {
