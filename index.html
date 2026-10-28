@@ -73,6 +73,9 @@
 
   /* ===== TIMELINE SECTION ===== */
   .section-label { font-size: 12px; font-weight: 700; color: #aaa; letter-spacing: 1px; margin-bottom: 10px; padding-left: 4px; }
+  .sync { font-size: 11px; font-weight: 600; color: #B9651A; background: #FFF6EC; border-radius: 4px; padding: 2px 8px; margin-left: 6px; letter-spacing: 0; }
+  .sync.ok { color: #1B7A43; background: #EBF9F0; }
+  .sync:empty { display: none; }
   .section-label .hint { font-weight: 400; letter-spacing: 0; color: #bbb; }
   .timeline-wrap { background: #fff; border-radius: 16px; box-shadow: 0 6px 24px rgba(0,0,0,.1), 0 2px 8px rgba(0,0,0,.06); overflow: hidden; margin-bottom: 20px; transform: scale(1.015); position: relative; z-index: 1; }
   .timeline { display: flex; align-items: flex-start; position: relative; padding: 36px 28px 28px; overflow-x: auto; min-width: 0; }
@@ -291,7 +294,7 @@
   </div>
 
   <!-- TIMELINE -->
-  <div class="section-label">📅 청약 진행 타임라인 <span class="hint">· 점을 누르면 완료 표시 · 상세보기를 누르면 제출 서류</span></div>
+  <div class="section-label">📅 청약 진행 타임라인 <span class="hint">· 점을 누르면 완료 표시 · 상세보기를 누르면 제출 서류</span> <span class="sync" id="syncFlag"></span></div>
   <div class="timeline-wrap">
     <div class="timeline">
       <div class="step c-gray" data-end="2026-09-29">
@@ -1519,11 +1522,14 @@ function togglePanel(panelId, btn) {
   if (!isOpen) { panel.classList.add('open'); btn.classList.add('open'); panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
 }
 
-// ---- 저장소: Firebase(팀 공유, 29-1과 별도 경로) → 안 되면 이 브라우저에 저장 ----
+// ---- 저장소: 이 브라우저(localStorage)에 항상 저장 + Firebase 연결되면 팀 공유 ----
 var store = (function(){
   var BASE = 'songsan-30-26';
+  var db = null, fbOK = false;
+  function lsGet(k){ try { return JSON.parse(localStorage.getItem(BASE + '-' + k)); } catch (e) { return null; } }
+  function lsSet(k, v){ try { localStorage.setItem(BASE + '-' + k, JSON.stringify(v)); } catch (e) {} }
   try {
-    if (window.firebase) {
+    if (window.firebase && firebase.database) {
       if (!firebase.apps.length) firebase.initializeApp({
         apiKey: "AIzaSyDT4l9pSx3ozpcvPzRtfdCwNI0KqMxSk2s",
         authDomain: "order-d03ce.firebaseapp.com",
@@ -1533,16 +1539,31 @@ var store = (function(){
         messagingSenderId: "930014374996",
         appId: "1:930014374996:web:67d764f5bc946d1781d1c1"
       });
-      var db = firebase.database();
-      return {
-        set: function(k, v){ db.ref(BASE + '/' + k).set(v); },
-        on: function(k, cb){ db.ref(BASE + '/' + k).on('value', function(s){ cb(s.val()); }); }
-      };
+      db = firebase.database();
     }
-  } catch (e) {}
+  } catch (e) { db = null; }
+  function flag(ok){
+    fbOK = ok;
+    var el = document.getElementById('syncFlag');
+    if (el) { el.textContent = ok ? '팀 공유 저장됨' : '이 브라우저에만 저장됨'; el.className = 'sync' + (ok ? ' ok' : ''); }
+  }
+  flag(false);
   return {
-    set: function(k, v){ try { localStorage.setItem(BASE + '-' + k, JSON.stringify(v)); } catch (e) {} },
-    on: function(k, cb){ var v = null; try { v = JSON.parse(localStorage.getItem(BASE + '-' + k)); } catch (e) {} cb(v); }
+    set: function(k, v){
+      lsSet(k, v);                                   // 1) 항상 이 브라우저에 저장
+      if (db) {                                      // 2) 가능하면 팀 공유에도 저장
+        db.ref(BASE + '/' + k).set(v, function(err){ flag(!err); });
+      }
+    },
+    on: function(k, cb){
+      cb(lsGet(k));                                  // 먼저 로컬 값으로 복원
+      if (db) {
+        db.ref(BASE + '/' + k).on('value', function(snap){
+          var v = snap.val();
+          if (v) { flag(true); lsSet(k, v); cb(v); }
+        }, function(){ flag(false); });
+      }
+    }
   };
 })();
 
